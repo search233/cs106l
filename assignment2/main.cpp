@@ -7,6 +7,7 @@
  *
  */
 
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <queue>
@@ -14,7 +15,7 @@
 #include <string>
 #include <unordered_set>
 
-std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
+std::string kYourName = "Erik Yang"; // Don't forget to change this!
 
 /**
  * Takes in a file name and returns a set containing all of the applicant names as a set.
@@ -27,10 +28,38 @@ std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
  * below it) to use a `std::unordered_set` instead. If you do so, make sure
  * to also change the corresponding functions in `utils.h`.
  */
-std::set<std::string> get_applicants(std::string filename) {
-  // STUDENT TODO: Implement this function.
+std::unordered_set<std::string> get_applicants(std::string filename) {
+    // STUDENT TODO: Implement this function.
+    std::unordered_set<std::string> students;
+    std::ifstream fin(filename, std::ios::in);
+    std::string student_name;
+
+    while (std::getline(fin, student_name)) {
+        students.insert(student_name);
+    }
+
+    return students;
 }
 
+bool help_func(std::string s1, std::string s2) {
+    bool f = true;
+    f &= (s1.front() == s2.front());
+
+    auto get_it = [](std::string& s) -> char {
+        auto it = s.begin();
+        while (it != s.end() && (*it) != ' ') {
+            it = std::next(it);
+        }
+
+        assert(std::next(it) != s.end());
+
+        return *(next(it));
+    };
+
+    f &= (get_it(s1) == get_it(s2));
+
+    return f;
+}
 /**
  * Takes in a set of student names by reference and returns a queue of names
  * that match the given student name.
@@ -39,8 +68,17 @@ std::set<std::string> get_applicants(std::string filename) {
  * @param students  The set of student names.
  * @return          A queue containing pointers to each matching name.
  */
-std::queue<const std::string*> find_matches(std::string name, std::set<std::string>& students) {
-  // STUDENT TODO: Implement this function.
+std::queue<const std::string*> find_matches(std::string name, std::unordered_set<std::string>& students) {
+    // STUDENT TODO: Implement this function.
+    std::queue<const std::string*> que;
+
+    for (auto other_name : students) {
+        if (help_func(name, other_name)) {
+            que.push(&other_name);
+        }
+    }
+    
+    return que;
 }
 
 /**
@@ -54,7 +92,22 @@ std::queue<const std::string*> find_matches(std::string name, std::set<std::stri
  *                Will return "NO MATCHES FOUND." if `matches` is empty.
  */
 std::string get_match(std::queue<const std::string*>& matches) {
-  // STUDENT TODO: Implement this function.
+    // STUDENT TODO: Implement this function.
+    std::string result = "";
+
+    while (matches.empty() == false) {
+        if (matches.size() == 5) {
+            result = *matches.front();
+        }
+
+        matches.pop();
+    }
+
+    if (result == "") {
+        result = "NO MATCHES FOUND.";
+    }
+    
+    return result;
 }
 
 /* #### Please don't remove this line! #### */
