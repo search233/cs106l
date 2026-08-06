@@ -1,3 +1,6 @@
+#ifndef CLASS_H_
+#define CLASS_H_
+
 #include <vector>
 #include <cassert>
 
@@ -70,3 +73,5 @@ public:
 };
 
 #include "class.cpp"
+
+#endif

@@ -1,3 +1,8 @@
+#ifndef CLASS_CPP_
+#define CLASS_CPP_
+
+#include "class.h"
+
 template <typename elementType>
 stack<elementType>::stack() : vec(10, elementType()), topP(0) {}
 
@@ -28,3 +33,5 @@ template <typename elementType>
 void stack<elementType>::set_topP(std::size_t num) {
     topP = num;
 }
+
+#endif

@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="docs/bjarne.jpg" alt="Bjarne Stroustrup writing the declaration of a class on a whiteboard" />
 </p>
@@ -45,14 +44,12 @@ g++ -std=c++20 main.cpp class.cpp -o main
 >
 > ```sh
 > g++ -static-libstdc++ -std=c++20 main.cpp class.cpp -o main
->
 > ```
 >
 > 此外，编译生成的输出可执行文件可能叫 `main.exe`，这种情况下您需要用以下命令运行代码：
 >
 > ```sh
 > ./main.exe
->
 > ```
 
 ## Part 1：创建您的类
