@@ -9,7 +9,7 @@
 #include <vector>
 
 /** STUDENT_TODO: You will need to include a relevant header file here! */
-
+#include <optional>
 #include "autograder/utils.hpp"
 
 /**
@@ -17,79 +17,106 @@
  */
 struct Course
 {
-  std::string title;
-  std::string number_of_units;
-  std::string quarter;
+    std::string title;
+    std::string number_of_units;
+    std::string quarter;
 
-  /**
-   * You don't have to ignore this anymore! We're defining the `==` operator for
-   * the Course struct.
-   */
-  bool operator==(const Course& other) const
-  {
-    return title == other.title && number_of_units == other.number_of_units &&
-           quarter == other.quarter;
-  }
+    /**
+     * You don't have to ignore this anymore! We're defining the `==` operator for
+     * the Course struct.
+     */
+    bool operator==(const Course& other) const
+    {
+        return title == other.title 
+        && number_of_units == other.number_of_units 
+        && quarter == other.quarter;
+    }
 };
 
 class CourseDatabase
 {
 public:
-  CourseDatabase(std::string filename)
-  {
-    auto lines = read_lines(filename);
-    std::transform(lines.begin(),
-                   lines.end(),
-                   std::back_inserter(courses),
-                   [](std::string line) {
-                     auto parts = split(line, ',');
-                     return Course{ parts[0], parts[1], parts[2] };
-                   });
-  }
+    CourseDatabase(std::string filename)
+    {
+        auto lines = read_lines(filename);
 
-  /**
-   * Finds a course in the database with the given title, if it exists.
-   * @param course_title The title of the course to find.
-   * @return You will need to figure this out!
-   */
-  FillMeIn find_course(std::string course_title)
-  {
-    /* STUDENT_TODO: Implement this method! You will need to change the return
-     * type. */
-  }
+        std::transform
+        (
+            lines.begin(),
+            lines.end(),
+            std::back_inserter(courses),
+            [](std::string line) {
+                auto parts = split(line, ',');
+                return Course{ parts[0], parts[1], parts[2] };
+            }
+        );
+    }
+    
+
+    /**
+     * Finds a course in the database with the given title, if it exists.
+     * @param course_title The title of the course to find.
+     * @return You will need to figure this out!
+     */
+    std::optional<Course> find_course(std::string course_title)
+    {
+        std::optional<Course> res = std::nullopt;
+
+        for (auto course : courses) {
+
+            auto [title, number_of_units, quarter] = course;
+
+            if (title == course_title) {
+                res = course;
+                break;
+            }
+        }
+
+        return res;
+    }
 
 private:
-  std::vector<Course> courses;
+    std::vector<Course> courses;
 };
 
 int
 main(int argc, char* argv[])
 {
-  static_assert(
-    !std::is_same_v<std::invoke_result_t<decltype (&CourseDatabase::find_course), 
-                      CourseDatabase, std::string>,
-                    FillMeIn>,
-    "You must change the return type of CourseDatabase::find_course to "
-    "something other than FillMeIn.");
+    static_assert(
+        !std::is_same_v<std::invoke_result_t<decltype (&CourseDatabase::find_course), 
+                                            CourseDatabase, std::string>,
+                                        FillMeIn>,
+        "You must change the return type of CourseDatabase::find_course to "
+        "something other than FillMeIn.");
 
-  if (argc == 2) {
-    CourseDatabase db("autograder/courses.csv");
-    auto course = db.find_course(argv[1]);
+    if (argc == 2) {
+        CourseDatabase db("autograder/courses.csv");
+        auto course = db.find_course(argv[1]);
+        
+        /******************************************************** 
+        STUDENT_TODO: Populate the output string with the right information to print
+        Please pay special attention to the README here
+        ********************************************************/
+
+        auto trans = [](const std::optional<Course> course) {
+            std::string s = "Found course: " 
+                + course->title + ','
+                + course->number_of_units + ','
+                + course->quarter + '\n';
+            return s;
+        };
+
+        std::string output = course
+            .transform(trans)
+            .value_or("Course not found.\n");
+
+        /********************************************************
+         DO NOT MODIFY ANYTHING BELOW THIS LINE PLEASE
+        ********************************************************/
+
+        std::cout << output << std::endl;
+        return 0;
+    }
     
-    /******************************************************** 
-    STUDENT_TODO: Populate the output string with the right information to print
-    Please pay special attention to the README here
-    ********************************************************/
-
-    std::string output = /* STUDENT_TODO */
-
-    /********************************************************
-     DO NOT MODIFY ANYTHING BELOW THIS LINE PLEASE
-    ********************************************************/
-
-    std::cout << output << std::endl;
-    return 0;
-  }
-  
-  return run_autograder();
+    return run_autograder();
 }
